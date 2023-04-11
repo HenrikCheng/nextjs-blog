@@ -4,6 +4,8 @@ import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 import { getSortedPostsData } from "../lib/posts";
 import Date from "../components/date";
+import useSWR from "swr";
+import axios from "axios";
 
 export async function getStaticProps() {
   const allPostsData = getSortedPostsData();
@@ -15,6 +17,24 @@ export async function getStaticProps() {
 }
 
 export default function Home({ allPostsData }) {
+  const fetcher = (url) =>
+    axios
+      .get(url, {
+        headers: {
+          Accept: "application/json",
+        },
+      })
+      .then((res) => res.data);
+
+  const { data, error, isLoading } = useSWR(
+    "https://icanhazdadjoke.com",
+    fetcher
+  );
+  console.log("🚀 ~ file: index.js:31 ~ Home ~ data:", data);
+
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
+
   return (
     <Layout home>
       <Head>
@@ -28,9 +48,10 @@ export default function Home({ allPostsData }) {
           fetch data <Link href="/posts/second-post">onClick</Link>
         </h1>
         <h1>
-          Fetch data onload with <Link href="/posts/third-post-swr">swr</Link>
+          Fetch data with <Link href="/posts/third-post-swr">swr</Link>
         </h1>
-        <p>Hello world!</p>
+        <h3>Joke of the day...</h3>
+        <p>{data.joke}</p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
