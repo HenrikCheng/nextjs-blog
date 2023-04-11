@@ -25,7 +25,7 @@ export default function Home({ allPostsData }) {
           Read <Link href="/posts/first-post">this page!</Link>
         </h1>
         <h1>
-          fetch data <Link href="/pots/second-post">onClick</Link>
+          fetch data <Link href="/posts/second-post">onClick</Link>
         </h1>
         <h1>
           Fetch data onload with <Link href="/posts/third-post-swr">swr</Link>
